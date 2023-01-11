@@ -9,12 +9,12 @@ namespace PoissonProceduralObjectPlacer
     public class GeneratorBehaviour : MonoBehaviour
     {
         public SpawnSurface Surface;
-        public int ObjectsCount;
+        public int ObjectsCount = 300;
 
         [Header("Settings")]
         public int RejectionSamplesThreshold = 30;
         public int GetPointTriesThreshold = 7;
-        public Vector2 SizeRange = Vector2.one;
+        public Vector2 SizeRange = new Vector2(0.95f, 1.05f);
 
         [Header("Debug")]
         public List<int> SpawnCollectionIndexes;

@@ -62,6 +62,8 @@ namespace PoissonProceduralObjectPlacer.Editor
 
         public void GeneratePoints()
         {
+            Undo.RecordObject(_target, nameof(GeneratePoints));
+            
             ClearSpawnPoints();
 
             var spawnCollection = GetSpawnCollection();
@@ -82,10 +84,13 @@ namespace PoissonProceduralObjectPlacer.Editor
             while (!finished);
 
             _pointsGenerator = generator;
+            EditorUtility.SetDirty(_target);
         }
 
         public void GenerateObjects()
         {
+            Undo.RecordObject(_target, nameof(GenerateObjects));
+            
             ClearGeneratedObjects();
 
             var pointsGenerator = GetPointsGenerator();
@@ -115,7 +120,7 @@ namespace PoissonProceduralObjectPlacer.Editor
                 _target.GeneratedObjects.Add(obj);
             }
 
-            EditorUtility.SetDirty(_target.Surface);
+            EditorUtility.SetDirty(_target);
         }
 
         public void ClearGeneratedObjects()
@@ -124,6 +129,8 @@ namespace PoissonProceduralObjectPlacer.Editor
             {
                 return;
             }
+            
+            Undo.RecordObject(_target, nameof(ClearGeneratedObjects));
 
             if (Application.isPlaying)
             {
@@ -140,15 +147,21 @@ namespace PoissonProceduralObjectPlacer.Editor
                 }
             }
 
-            EditorUtility.SetDirty(this);
-
             _target.GeneratedObjects.Clear();
+            EditorUtility.SetDirty(_target);
         }
 
         public void ClearSpawnPoints()
         {
-            _target.SpawnCollectionIndexes ??= new List<int>();
+            if (_target.SpawnCollectionIndexes == null || _target.SpawnCollectionIndexes.Count == 0)
+            {
+                return;
+            }
+            
+            Undo.RecordObject(_target, nameof(ClearSpawnPoints));
+            
             _target.SpawnCollectionIndexes.Clear();
+            EditorUtility.SetDirty(_target);
         }
 
         private IPointsGenerator GetPointsGenerator()
