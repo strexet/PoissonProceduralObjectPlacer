@@ -26,7 +26,8 @@ namespace PoissonProceduralObjectPlacer.PointsGenerator.Poisson
 
         private bool CanGetNextPoint => GeneratedCount < _count && _spawnPoints.Count > 0;
 
-        public PoissonDiscSamplingGenerator(int count, Vector2 sampleRegionSize,
+        public PoissonDiscSamplingGenerator(int count,
+            Vector2 sampleRegionSize, Vector2 startSamplingOffset,
             float minRadius, float maxRadius,
             int numSamplesBeforeRejection, int getPointTriesThreshold)
         {
@@ -41,7 +42,7 @@ namespace PoissonProceduralObjectPlacer.PointsGenerator.Poisson
             _points = new List<Point>();
             _spawnPoints = new List<Point>();
 
-            var startPosition = 0.5f * sampleRegionSize; // middle position
+            var startPosition = 0.5f * sampleRegionSize + startSamplingOffset; // mi≠ddle position
             var startPoint = new Point(startPosition, minRadius);
             _spawnPoints.Add(startPoint);
 

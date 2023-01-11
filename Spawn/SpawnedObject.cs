@@ -2,11 +2,13 @@ using UnityEngine;
 
 namespace PoissonProceduralObjectPlacer.Spawn
 {
+    [SelectionBase]
     public class SpawnedObject : MonoBehaviour, ISpawnedObject
     {
         [SerializeField] private float _radius;
+        [SerializeField] private GameObject _prefab;
 
-        public GameObject Object => gameObject;
+        public GameObject ObjectPrefab => _prefab;
 
         public float Radius => _radius;
 
