@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using PoissonProceduralObjectPlacer.Extensions;
 using PoissonProceduralObjectPlacer.PointsGenerator;
 using PoissonProceduralObjectPlacer.PointsGenerator.Poisson;
@@ -89,7 +88,7 @@ namespace PoissonProceduralObjectPlacer.Editor
 
         public void GenerateObjects()
         {
-            Undo.RecordObject(_target, nameof(GenerateObjects));
+            Undo.RecordObject(_target.GeneratedObjects, nameof(GenerateObjects));
             
             ClearGeneratedObjects();
 
@@ -113,42 +112,42 @@ namespace PoissonProceduralObjectPlacer.Editor
                 var objTransform = obj.transform;
 
                 objTransform.SetParent(_target.Surface.transform);
-                objTransform.position = GetPointPosition(point.position);
+                objTransform.localPosition = GetPointPosition(point.position);
                 objTransform.rotation = GetRandomRotationXZ();
                 objTransform.localScale = Random.Range(_target.SizeRange.x, _target.SizeRange.y) * Vector3.one;
 
-                _target.GeneratedObjects.Add(obj);
+                _target.GeneratedObjects.List.Add(obj);
             }
 
-            EditorUtility.SetDirty(_target);
+            EditorUtility.SetDirty(_target.GeneratedObjects);
         }
 
         public void ClearGeneratedObjects()
         {
-            if (_target.GeneratedObjects == null || _target.GeneratedObjects.Count == 0)
+            if (_target.GeneratedObjects == null || _target.GeneratedObjects.List.Count == 0)
             {
                 return;
             }
             
-            Undo.RecordObject(_target, nameof(ClearGeneratedObjects));
+            Undo.RecordObject(_target.GeneratedObjects, nameof(ClearGeneratedObjects));
 
             if (Application.isPlaying)
             {
-                foreach (var generatedObject in _target.GeneratedObjects)
+                foreach (var generatedObject in _target.GeneratedObjects.List)
                 {
                     Destroy(generatedObject);
                 }
             }
             else
             {
-                foreach (var generatedObject in _target.GeneratedObjects)
+                foreach (var generatedObject in _target.GeneratedObjects.List)
                 {
                     DestroyImmediate(generatedObject);
                 }
             }
 
-            _target.GeneratedObjects.Clear();
-            EditorUtility.SetDirty(_target);
+            _target.GeneratedObjects.List.Clear();
+            EditorUtility.SetDirty(_target.GeneratedObjects);
         }
 
         public void ClearSpawnPoints()
@@ -231,7 +230,7 @@ namespace PoissonProceduralObjectPlacer.Editor
         {
             if (Application.isPlaying ||
                 _pointsGenerator == null ||
-                _target.GeneratedObjects.Count > 0)
+                _target.GeneratedObjects.List.Count > 0)
             {
                 return;
             }

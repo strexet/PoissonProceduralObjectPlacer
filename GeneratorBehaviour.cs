@@ -16,8 +16,8 @@ namespace PoissonProceduralObjectPlacer
         public int GetPointTriesThreshold = 7;
         public Vector2 SizeRange = new Vector2(0.95f, 1.05f);
 
-        [Header("Debug")]
+        [Header("Generated")]
         public List<int> SpawnCollectionIndexes;
-        public List<GameObject> GeneratedObjects;
+        public GeneratedObjectsCollection GeneratedObjects;
     }
 }
