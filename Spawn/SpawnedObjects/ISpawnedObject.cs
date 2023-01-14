@@ -4,7 +4,8 @@ namespace PoissonProceduralObjectPlacer.Spawn
 {
     public interface ISpawnedObject
     {
-        public GameObject ObjectPrefab {get;}
         public float Radius {get;}
+        public GameObject ObjectPrefab {get;}
+        public bool IsEmpty {get;}
     }
 }

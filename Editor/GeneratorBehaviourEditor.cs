@@ -106,13 +106,27 @@ namespace PoissonProceduralObjectPlacer.Editor
                 var spawnIndex = _target.SpawnCollectionIndexes[i];
                 var spawnedObject = spawnCollection.ObjectsToSpawn[spawnIndex];
 
-                var point = generatedPoints[i];
+                
+
+                if (spawnedObject.IsEmpty)
+                {
+                    continue;
+                }
+
+                if (spawnedObject.ObjectPrefab == null)
+                {
+                    Debug.LogError($"[ERROR]<color=red>{nameof(GeneratorBehaviourEditor)}.{nameof(GenerateObjects)}></color> " + 
+                                   "No prefab reference!", _target);
+                    continue;
+                }
 
                 var obj = PrefabUtility.InstantiatePrefab(spawnedObject.ObjectPrefab) as GameObject;
+                var point = generatedPoints[i];
+                
                 var objTransform = obj.transform;
-
                 objTransform.SetParent(_target.Surface.transform);
-                objTransform.localPosition = GetPointPosition(point.position);
+
+                objTransform.position = GetPointPosition(point.position);
                 objTransform.rotation = GetRandomRotationXZ();
                 objTransform.localScale = Random.Range(_target.SizeRange.x, _target.SizeRange.y) * Vector3.one;
 
