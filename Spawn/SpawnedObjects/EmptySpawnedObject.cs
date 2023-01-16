@@ -1,8 +1,9 @@
 using UnityEngine;
+using UsefulTools.Runtime.DataStructures.InterfaceImplementations;
 
 namespace PoissonProceduralObjectPlacer.Spawn
 {
-    public class EmptySpawnedObject : MonoBehaviour, ISpawnedObject
+    public class EmptySpawnedObject : MonoBehaviourImplementation<ISpawnedObject>, ISpawnedObject
     {
         [SerializeField] private float _radius;
 

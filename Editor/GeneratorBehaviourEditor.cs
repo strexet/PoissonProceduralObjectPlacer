@@ -1,9 +1,11 @@
 using PoissonProceduralObjectPlacer.Extensions;
 using PoissonProceduralObjectPlacer.PointsGenerator;
 using PoissonProceduralObjectPlacer.PointsGenerator.Poisson;
+using PoissonProceduralObjectPlacer.Spawn;
 using PoissonProceduralObjectPlacer.Spawn.Collections;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace PoissonProceduralObjectPlacer.Editor
 {
@@ -67,12 +69,14 @@ namespace PoissonProceduralObjectPlacer.Editor
 
             var spawnCollection = GetSpawnCollection();
             var generator = CreateGenerator(spawnCollection);
-
+            var objectsToSpawn = spawnCollection.ObjectsToSpawn;
+            
             bool finished;
 
             do
             {
-                var spawnedObject = spawnCollection.ObjectsToSpawn.GetRandom(out var index);
+                
+                var spawnedObject = objectsToSpawn.GetRandom(out var index);
                 var radius = spawnedObject.Radius;
 
                 if (generator.GetNextPointWithRadius(radius, out _, out finished))
@@ -81,7 +85,7 @@ namespace PoissonProceduralObjectPlacer.Editor
                 }
             }
             while (!finished);
-
+            
             _pointsGenerator = generator;
             EditorUtility.SetDirty(_target);
         }
@@ -98,13 +102,14 @@ namespace PoissonProceduralObjectPlacer.Editor
             var spawnPointsCount = _target.SpawnCollectionIndexes.Count;
 
             var spawnCollection = GetSpawnCollection();
+            var objectsToSpawn = spawnCollection.ObjectsToSpawn;
 
             var length = Mathf.Min(generatedPointsCount, spawnPointsCount);
 
             for (var i = 0; i < length; i++)
             {
                 var spawnIndex = _target.SpawnCollectionIndexes[i];
-                var spawnedObject = spawnCollection.ObjectsToSpawn[spawnIndex];
+                var spawnedObject = objectsToSpawn[spawnIndex];
 
                 
 
@@ -200,10 +205,11 @@ namespace PoissonProceduralObjectPlacer.Editor
 
         private static (float minRadius, float maxRadius) GetRadiusMinMax(ISpawnCollection spawnCollection)
         {
+            var objectsToSpawn = spawnCollection.ObjectsToSpawn;
             var minRadius = float.MaxValue;
             float maxRadius = 0;
 
-            foreach (var objectToSpawn in spawnCollection.ObjectsToSpawn)
+            foreach (var objectToSpawn in objectsToSpawn)
             {
                 var radius = objectToSpawn.Radius;
 
